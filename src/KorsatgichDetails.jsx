@@ -51,7 +51,7 @@ function KorsatgichDetails() {
       </button>
 
       {/* Jadval */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-lg overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-white border-b border-gray-200 text-left">

@@ -1,14 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-// Monitoring ro'yxati — har biri alohida tafsilot sahifaga olib boradi
-const monitoring = [
-  { id: "darsga-ishtirok", nomi: "Darsga ishtirok", xp: 86, kumush: 344 },
-  { id: "uyga-vazifa",     nomi: "Uyga vazifa",     xp: 75, kumush: 300 },
-];
-
-// Jami yig'ilgan — har bir satrdagi raqamlar yig'indisi
-const jamiXP     = monitoring.reduce((sum, m) => sum + m.xp, 0);
-const jamiKumush = monitoring.reduce((sum, m) => sum + m.kumush, 0);
+import { monitoring, jamiXP, jamiKumush, BOSQICH_XP } from "./data/kumush";
 
 function Korsatgichlarim() {
   const navigate = useNavigate();
@@ -22,7 +14,7 @@ function Korsatgichlarim() {
           <svg className="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="currentColor">
             <path d="M6 3h12l4 6-10 12L2 9z" />
           </svg>
-          Kumushlar: <span className="text-gray-800">644</span>
+          Kumushlar: <span className="text-gray-800">{jamiKumush}</span>
         </div>
       </div>
 
@@ -36,10 +28,10 @@ function Korsatgichlarim() {
         </div>
 
         <span className="inline-block bg-emerald-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-2">
-          161 / 200
+          {jamiXP} / {BOSQICH_XP}
         </span>
         <div className="h-2 bg-emerald-100 rounded-full overflow-hidden mb-4">
-          <div className="h-full bg-emerald-500" style={{ width: "80.5%" }} />
+          <div className="h-full bg-emerald-500" style={{ width: `${Math.min(100, (jamiXP / BOSQICH_XP) * 100)}%` }} />
         </div>
 
         <div className="flex items-center gap-2">
@@ -47,7 +39,7 @@ function Korsatgichlarim() {
             <circle cx="12" cy="12" r="9" />
             <path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z" />
           </svg>
-          <span className="font-semibold text-gray-700">XP: 161</span>
+          <span className="font-semibold text-gray-700">XP: {jamiXP}</span>
         </div>
       </div>
 
@@ -90,7 +82,7 @@ function Korsatgichlarim() {
             <svg className="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="currentColor">
               <path d="M6 3h12l4 6-10 12L2 9z" />
             </svg>
-            Jami yig'ilgan Kumushlar: <span className="text-gray-800">{jamiXP + 483}</span>
+            Jami yig'ilgan Kumushlar: <span className="text-gray-800">{jamiKumush}</span>
           </div>
         </div>
       </div>

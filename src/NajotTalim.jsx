@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const routing = [
@@ -15,12 +14,12 @@ function Najottalim() {
   };
 
   return (
-    <div className="min-h-screen text-white flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
       {/* Top bar */}
       <header className="border-b border-white/10 bg-white/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Link to="/najot-talim" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-sm">
                 N
               </div>
@@ -67,7 +66,7 @@ function Najottalim() {
 
             <div className="mt-6 pt-6 border-t border-white/10">
               <Link
-                to="/"
+                to="/najot-talim"
                 className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white hover:bg-white/8 transition-all"
               >
                 <span>🏠</span>

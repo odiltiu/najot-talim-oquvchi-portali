@@ -14,10 +14,21 @@ import Dokon from './Dokon.jsx'
 import QoshimchaDarslar from './QoshimchaDarslar.jsx'
 import Sozlamalar from './Sozlamalar.jsx'
 
+// Oldin routerga ulanmagan sahifalar (landing, talaba/admin paneli, kurslar, 404, xato sahifasi)
+import App from './App.jsx'
+import NajotTalim from './NajotTalim.jsx'
+import StudentPanel from './StudentPanel.jsx'
+import AdminPanel from './AdminPanel.jsx'
+import Kurslar from './Kurslar.jsx'
+import ProtectedRoute from './ProtectedRoute.jsx'
+import NotFoundPage from './NotFoundPage.jsx'
+import ErrorBoundry from './ErrorBoundry.jsx'
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
+    errorElement: <ErrorBoundry />,
     children: [
       { index: true, element: <BoshSahifa /> },
       { path: 'tolovlarim', element: <Tolovlarim /> },
@@ -30,6 +41,23 @@ const router = createBrowserRouter([
       { path: 'sozlamalar', element: <Sozlamalar /> },
     ],
   },
+  {
+    // Najot Ta'lim landing sahifasi va undagi panellar
+    path: '/najot-talim',
+    errorElement: <ErrorBoundry />,
+    children: [
+      { index: true, element: <App /> },
+      {
+        element: <NajotTalim />,
+        children: [
+          { path: 'student', element: <StudentPanel /> },
+          { path: 'admin', element: <ProtectedRoute><AdminPanel /></ProtectedRoute> },
+          { path: 'kurslar', element: <Kurslar /> },
+        ],
+      },
+    ],
+  },
+  { path: '*', element: <NotFoundPage /> },
 ])
 
 createRoot(document.getElementById('root')).render(

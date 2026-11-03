@@ -18,7 +18,7 @@ const courses = [
 
 function App() {
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen bg-slate-950 text-white">
       {/* Navbar */}
       <nav className="border-b border-white/10 bg-white/5 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -36,8 +36,7 @@ function App() {
             </Link>
           
             
-            <a href="#" className="hover:text-white transition-colors">O'qituvchilar</a>
-            <a href="#" className="hover:text-white transition-colors">Haqida</a>
+            <Link to="/" className="hover:text-white transition-colors">Talaba portali</Link>
           </div>
           <Link
             to="/najot-talim/student"
@@ -104,9 +103,9 @@ function App() {
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">Mashhur kurslar</h2>
-          <a href="#" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
+          <Link to="/najot-talim/kurslar" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
             Barchasini ko'rish →
-          </a>
+          </Link>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
          
