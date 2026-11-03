@@ -23,14 +23,16 @@ function Reyting() {
   const [vaqt, setVaqt] = useState("Oylik");
 
   return (
-    <div className="flex gap-6">
-      {/* Chapdagi filtr paneli */}
-      <aside className="w-72 shrink-0">
+    <div className="flex flex-col lg:flex-row gap-6">
+      {/* Chapdagi filtr paneli (telefonda jadval ustida) */}
+      <aside className="w-full lg:w-72 shrink-0">
         <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
           {/* Birinchi guruh */}
           {filialTablar.map((text, i) => (
             <button
               key={text}
+              type="button"
+              aria-pressed={filial === text}
               onClick={() => setFilial(text)}
               className={`w-full py-3 rounded-lg text-sm font-semibold cursor-pointer transition-colors ${
                 filial === text
@@ -65,7 +67,7 @@ function Reyting() {
       <div className="flex-1 min-w-0">
         <h1 className="text-xl font-bold text-gray-800 mb-4">Filial bo'yicha yetakchilar</h1>
 
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 text-left">

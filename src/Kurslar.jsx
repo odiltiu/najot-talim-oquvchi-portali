@@ -16,9 +16,9 @@ function Kurslar() {
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold">Mashhur kurslar</h2>
-          <a href="#" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
-            Barchasini ko'rish →
-          </a>
+          <Link to="/najot-talim" className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
+            ← Bosh sahifa
+          </Link>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
          

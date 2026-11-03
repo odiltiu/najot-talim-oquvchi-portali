@@ -6,7 +6,7 @@ const menu = [
   { path: "/guruhlarim", text: "Guruhlarim", icon: "people" },
   { path: "/korsatgichlarim", text: "Ko'rsatgichlarim", icon: "chart" },
   { path: "/reyting", text: "Reyting", icon: "bars" },
-  { path: "/dokon", text: "Do`kon", icon: "cart" },
+  { path: "/dokon", text: "Do'kon", icon: "cart" },
   { path: "/qoshimcha-darslar", text: "Qo'shimcha darslar", icon: "screen" },
   { path: "/sozlamalar", text: "Sozlamalar", icon: "gear" },
 ];
@@ -30,9 +30,17 @@ function Icon({ name }) {
   );
 }
 
-function Sidebar() {
+function Sidebar({ open, onClose }) {
   return (
-    <aside className="w-64 shrink-0 bg-white border-r border-gray-200 min-h-screen">
+    <>
+      {/* Telefonda ochiq menyu orqasidagi qoraytirilgan fon */}
+      {open && <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={onClose} aria-hidden="true" />}
+    <aside
+      id="yon-panel"
+      className={`fixed inset-y-0 left-0 z-40 w-64 shrink-0 bg-white border-r border-gray-200 min-h-screen overflow-y-auto transition-transform md:static md:translate-x-0 ${
+        open ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       {/* Logo — SVG fayli (ichida ikonka + "NAJOT TA'LIM" matni birga) */}
       <div className="px-6 py-5 flex items-center gap-2">
         <img src="/logo.svg" alt="Najot Ta'lim" className="h-7" />
@@ -41,7 +49,7 @@ function Sidebar() {
         </span>
       </div>
 
-      <nav className="px-3 pb-6 flex flex-col gap-1">
+      <nav aria-label="Talaba paneli" className="px-3 pb-6 flex flex-col gap-1">
         {menu.map((item) => (
           <NavLink
             key={item.path}
@@ -61,6 +69,7 @@ function Sidebar() {
         ))}
       </nav>
     </aside>
+    </>
   );
 }
 

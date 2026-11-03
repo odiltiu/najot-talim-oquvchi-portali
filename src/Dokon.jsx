@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { jamiKumush, loadXaridlar, saveXaridlar } from "./data/kumush";
 
 // Mahsulotlar ro'yxati
 const mahsulotlar = [
@@ -12,32 +13,57 @@ const mahsulotlar = [
   { id: 8, nom: "Sichqoncha gilami",                              narx: 2200, emoji: "🖱️" },
 ];
 
-// Foydalanuvchining kumushi — statik son
-const KUMUSHIM = 644;
+// Kumush balansi = yig'ilgan kumush − xaridlar narxi
 
 function Dokon() {
   const [tab, setTab]           = useState("sotuvda");
   const [qidir, setQidir]       = useState("");
   const [faqatArzon, setFaqatArzon] = useState(false);  // "Kumushlarim yetadi" filtri
+  const [narxDan, setNarxDan] = useState("");
+  const [narxGacha, setNarxGacha] = useState("");
+  const [xaridlar, setXaridlar] = useState(loadXaridlar);
+  const [xabar, setXabar] = useState("");
 
-  // Qidiruv + kumush yetadimi filtri birga
+  const sarflangan = xaridlar.reduce((sum, x) => sum + x.narx, 0);
+  const KUMUSHIM = jamiKumush - sarflangan;
+
+  const sotibOl = (m) => {
+    if (KUMUSHIM < m.narx) return;
+    if (!window.confirm(`"${m.nom}" ni ${m.narx} kumushga sotib olasizmi?`)) return;
+    const yangi = [...xaridlar, { id: m.id, nom: m.nom, narx: m.narx, emoji: m.emoji, sana: new Date().toISOString() }];
+    setXaridlar(yangi);
+    saveXaridlar(yangi);
+    setXabar(`"${m.nom}" sotib olindi. Qolgan kumush: ${KUMUSHIM - m.narx}`);
+  };
+
+  // Tuzatildi: oldin narx oralig'i maydonlari ulanmagan edi
+  const dan = narxDan === "" ? 0 : Number(narxDan);
+  const gacha = narxGacha === "" ? Infinity : Number(narxGacha);
   const natija = mahsulotlar.filter((m) => {
     const nomMos = m.nom.toLowerCase().includes(qidir.toLowerCase());
-    const narxMos = !faqatArzon || m.narx <= KUMUSHIM;
+    const narxMos = (!faqatArzon || m.narx <= KUMUSHIM) && m.narx >= dan && m.narx <= gacha;
     return nomMos && narxMos;
   });
 
   return (
     <div>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold text-gray-800">Do'kon</h1>
+        <p className="font-semibold text-gray-700">Kumushim: <span className="text-amber-600">{KUMUSHIM}</span></p>
+      </div>
+      {xabar && <p role="status" className="mb-4 rounded-lg bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">{xabar}</p>}
+
       {/* Tablar */}
       <div className="flex gap-8 border-b border-gray-200 mb-6">
         {[
           { key: "sotuvda", text: "Sotuvda" },
-          { key: "olgan",   text: "Sotib olganlarim" },
+          { key: "olgan",   text: `Sotib olganlarim (${xaridlar.length})` },
         ].map((t) => (
           <button
             key={t.key}
+            type="button"
             onClick={() => setTab(t.key)}
+            aria-pressed={tab === t.key}
             className={`pb-3 text-sm font-semibold transition-colors cursor-pointer border-b-2 -mb-px ${
               tab === t.key
                 ? "text-amber-600 border-amber-600"
@@ -49,6 +75,22 @@ function Dokon() {
         ))}
       </div>
 
+      {tab === "olgan" ? (
+        xaridlar.length === 0 ? (
+          <p className="text-center text-gray-400 py-10">Hali hech narsa sotib olmagansiz.</p>
+        ) : (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {xaridlar.map((x, i) => (
+              <li key={`${x.id}-${i}`} className="bg-white border border-gray-200 rounded-xl p-4">
+                <div className="text-5xl mb-3" aria-hidden="true">{x.emoji}</div>
+                <p className="font-semibold text-gray-800">{x.nom}</p>
+                <p className="text-sm text-gray-500 mt-1">{x.narx} kumush · {new Date(x.sana).toLocaleDateString("uz-UZ")}</p>
+              </li>
+            ))}
+          </ul>
+        )
+      ) : (
+      <>
       {/* Filtrlar qatori */}
       <div className="flex flex-wrap items-end gap-6 mb-6">
         <div>
@@ -59,20 +101,21 @@ function Dokon() {
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Akssesuar qiymati</label>
+          <label className="block text-sm text-gray-600 mb-1">Aksessuar qiymati</label>
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <input type="number" className="w-16 bg-white border border-gray-300 rounded px-2 py-2" />
+            <input type="number" min="0" aria-label="Narx (dan)" value={narxDan} onChange={(e) => setNarxDan(e.target.value)} className="w-20 bg-white border border-gray-300 rounded px-2 py-2" />
             <span>dan</span>
-            <input type="number" className="w-16 bg-white border border-gray-300 rounded px-2 py-2" />
+            <input type="number" min="0" aria-label="Narx (gacha)" value={narxGacha} onChange={(e) => setNarxGacha(e.target.value)} className="w-20 bg-white border border-gray-300 rounded px-2 py-2" />
             <span>gacha</span>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Akssesuar nomi</label>
+          <label className="block text-sm text-gray-600 mb-1">Aksessuar nomi</label>
           <div className="relative">
             <input
               type="text"
+              aria-label="Aksessuar nomi"
               value={qidir}
               onChange={(e) => setQidir(e.target.value)}
               placeholder="Qidirish..."
@@ -89,6 +132,10 @@ function Dokon() {
           <label className="block text-sm text-gray-600 mb-1">Kumushlarim yetadi</label>
           {/* Switch tugmasi — ichidagi aylana state ga qarab suriladi */}
           <button
+            type="button"
+            role="switch"
+            aria-checked={faqatArzon}
+            aria-label="Faqat kumushim yetadiganlar"
             onClick={() => setFaqatArzon(!faqatArzon)}
             className={`w-11 h-6 rounded-full p-0.5 transition-colors cursor-pointer ${
               faqatArzon ? "bg-amber-500" : "bg-gray-300"
@@ -125,7 +172,9 @@ function Dokon() {
                 </div>
 
                 <button
+                  type="button"
                   disabled={!yetadi}
+                  onClick={() => sotibOl(m)}
                   className={`text-xs font-semibold px-3 py-2 rounded-lg ${
                     yetadi
                       ? "bg-amber-500 hover:bg-amber-600 text-white cursor-pointer"
@@ -143,6 +192,8 @@ function Dokon() {
       {/* Hech nima topilmasa */}
       {natija.length === 0 && (
         <p className="text-center text-gray-400 py-10">Mahsulot topilmadi</p>
+      )}
+      </>
       )}
     </div>
   );
